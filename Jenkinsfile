@@ -97,7 +97,7 @@ pipeline {
         }
 
         stage('Kubernetes Deploy') {
-            agent { label 'KOPS' }
+            agent { label 'kops' }
             steps {
                 sh "helm upgrade --install --force student-stack helm/studentcrud --set appimage=${registry}:v${BUILD_NUMBER} --namespace prod"
             }
