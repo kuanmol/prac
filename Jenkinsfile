@@ -3,10 +3,10 @@ pipeline {
     agent any
     tools {
         maven "MAVEN3"
-        jdk "OracleJDK11"
+        jdk "JDK11"
     }
     environment {
-        registry="anmolk992/student-exp"
+        registry="anmolk992/prackube"
         registryCredentials = 'dockerhub'
     }
 
@@ -53,7 +53,7 @@ pipeline {
             }
 
             steps {
-                withSonarQubeEnv('sonar') {
+                withSonarQubeEnv('sonarserver') {
                     sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=studentcrud \
                     -Dsonar.projectName=studentcrud \
                     -Dsonar.projectVersion=0.0.1-SNAPSHOT \
@@ -99,7 +99,7 @@ pipeline {
         stage('Kubernetes Deploy') {
             agent { label 'KOPS' }
             steps {
-                sh "helm upgrade --install --force student-stack helm/studentcharts --set appimage=${registry}:v${BUILD_NUMBER} --namespace prod"
+                sh "helm upgrade --install --force student-stack helm/studentcrud --set appimage=${registry}:v${BUILD_NUMBER} --namespace prod"
             }
         }
     }
